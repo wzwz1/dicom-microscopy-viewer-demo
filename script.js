@@ -52,7 +52,7 @@ function getAccessToken() {
 }
 
 const DATACOMMONS = {
-    url: 'https://proxy.imaging.datacommons.cancer.gov/current/viewer-only-no-downloads-see-tinyurl-dot-com-slash-3j3d9jyp/dicomWeb',
+    url: 'https://proxy.imaging.datacommons.cancer.gov/dicomweb/',
     retrieveOptions: {
         studyInstanceUID: '2.25.339079652118011480966947516338286615501',
         seriesInstanceUID: '1.3.6.1.4.1.5962.99.1.1270712533.1568310047.1714962696405.4.0'
@@ -91,6 +91,7 @@ function startViewer() {
                 }
 
                 const image = new DICOMMicroscopyViewer.metadata.VLWholeSlideMicroscopyImage({ metadata: m });
+                console.log("Image object:", image)
                 if (image.ImageType && image.ImageType.length >= 3) {
                     const imageFlavor = image.ImageType[2];
                     if (imageFlavor === 'VOLUME' || imageFlavor === 'THUMBNAIL') {
@@ -105,7 +106,9 @@ function startViewer() {
 
             if (volumeImages.length === 0) {
                 console.error('No valid volume images found');
-                return;
+                console.log("No valid volume images found.")
+                 throw new Error('No valid volume images found')
+                
             }
 
             // Construct viewer instance
@@ -118,11 +121,14 @@ function startViewer() {
 
             // Render viewer instance in the "viewport" HTML element
             viewer.render({ container: document.getElementById('viewer') });
+             console.log("Rendering the viewer.")
         }).catch(err => {
             console.error('Error retrieving series metadata:', err);
+             console.log("Error retrieving series metadata.")
         });
     } else {
         console.error('Libraries not loaded properly.');
+         console.log("Libraries not loaded properly.")
     }
 }
 
